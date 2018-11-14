@@ -1,4 +1,4 @@
 const app = require('./app');
 require('./startDatabase');
 
-app.listen(3000, () => console.log('Server started!'));
+app.listen(4000, () => console.log('Server started!'));
