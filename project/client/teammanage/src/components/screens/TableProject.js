@@ -7,16 +7,25 @@ const hide = {
     display: 'none'
 };
 
+const displayMember = {
+    display: 'block'
+};
+const hideMember = {
+    display: 'none'
+};
+
 export class TableProject extends Component {
     state = {}
 
     constructor(props) {
         super(props);
         this.state = {
-            toggle: false
+            toggle: false,
+            toggleMember: false
         }
 
         this.toggle = this.toggle.bind(this);
+        this.toggleMember = this.toggleMember.bind(this);
     }
 
     toggle(event) {
@@ -25,7 +34,14 @@ export class TableProject extends Component {
         }));
     }
 
+    toggleMember(event) {
+        this.setState(prevState => ({
+            toggleMember: !prevState.toggleMember
+        }));
+    }
+
     render() {
+        // modal add member
         var modal;
         modal = (
             <div key="" className="modal" style={this.state.toggle ? display : hide}>
@@ -56,6 +72,47 @@ export class TableProject extends Component {
             </div>
         );
 
+        // model show member
+        var modalMember;
+        modalMember = (
+            <div key="" className="modal" style={this.state.toggleMember ? displayMember : hideMember}>
+                <div className="modal-content" style={{ width: '500px', margin: 'auto', marginTop: '15%', backgroundColor: '#e6e8ed' }}>
+                    <div style={{ textAlign: 'center' }}>
+                        <h4>MEMBERS</h4>
+                    </div>
+                    <div style={{ marginLeft: '10px' }}>
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Phone</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    {this.props.project.member.map(e => {
+                                        return (
+                                                <>
+                                                <td>{e.name}</td>
+                                                <td>{e.phone}</td>
+                                                </>
+                                            );
+                                    })}
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                    <br />
+
+                    <div style={{ marginLeft: '10px' }}>
+                        <button style={{ marginLeft: '1%' }} className="btn btn-success" onClick={this.toggleMember}>Cancel</button>
+                    </div>
+
+                </div>
+            </div>
+        );
+
         return (
             <div>
                 <div>
@@ -73,7 +130,9 @@ export class TableProject extends Component {
                                 <td style={{ textAlign: 'center' }}>
                                     <i className="fas fa-user-plus" onClick={this.toggle}></i>
                                 </td>
-                                <td style={{ textAlign: 'center' }}><i className="fas fa-users"></i></td>
+                                <td style={{ textAlign: 'center' }}>
+                                    <i className="fas fa-users" onClick={this.toggleMember}></i>
+                                </td>
                             </tr>
                         </tbody>
                     </table>
@@ -81,6 +140,10 @@ export class TableProject extends Component {
 
                 <div>
                     {modal}
+                </div>
+
+                <div>
+                    {modalMember}
                 </div>
 
             </div>
