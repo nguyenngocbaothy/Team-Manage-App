@@ -92,10 +92,10 @@ export class TableProject extends Component {
                                 <tr>
                                     {this.props.project.member.map(e => {
                                         return (
-                                                <>
-                                                <td>{e.name}</td>
-                                                <td>{e.phone}</td>
-                                                </>
+                                                <React.Fragment key={e._id}>
+                                                    <td>{e.name}</td>
+                                                    <td>{e.phone}</td>
+                                                </React.Fragment>
                                             );
                                     })}
                                 </tr>
