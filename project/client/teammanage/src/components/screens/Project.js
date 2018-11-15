@@ -1,61 +1,41 @@
 import React, { Component } from 'react';
+import { TableProject } from '../screens/TableProject';
+import axios from 'axios';
+import { connect } from 'react-redux';
 
-const display = {
-    display: 'block'
-};
-const hide = {
-    display: 'none'
-};
 
-export class Project extends Component {
+export class ProjectComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            txtName: '',
-            toggle: false
+            txtName: ''
         }
 
-        this.toggle = this.toggle.bind(this);
+        this.createProject = this.createProject.bind(this);
     }
 
-    toggle(event) {
-        this.setState(prevState => ({
-            toggle: !prevState.toggle
-        }));
+    componentDidMount() {
+        axios.get('http://localhost:4000/project/')
+        .then(data => {
+            console.log(data.data.projects);
+            this.props.dispatch({type: 'GET_PROJECTS', projects: data.data.projects})
+        });
+    }
+
+    createProject() {
+        const { txtName } = this.state;
+        axios.post('http://localhost:4000/project/', { 
+            name: txtName
+        })
+        .then(data => {
+            console.log(data.data.project);
+            this.props.dispatch({type: 'CREATE_PROJECT', project: data.data.project})
+        });
+
+        this.setState({txtName: ''});
     }
 
     render() {
-        var modal;
-        modal = (
-            <div key="" className="modal" style={this.state.toggle ? display : hide}>
-                <div className="modal-content" style={{ width: '500px', margin: 'auto', marginTop: '15%', backgroundColor: '#e6e8ed' }}>
-                    <div style={{ textAlign: 'center' }}>
-                        <h4>SELECT MEMBERS</h4>
-                    </div>
-                    <div style={{ marginLeft: '10px' }}>
-                        <label>Member name: </label>
-                        <select className="form-control" style={{ width: '200px' }}>
-                            <option>name</option>
-                            <option>name</option>
-                            <option>name</option>
-                        </select>
-                    </div>
-
-                    <br />
-
-                    <div style={{ marginLeft: '10px' }}>
-                        <button className="btn btn-success" onClick={this.toggle}>Add</button>
-                        <button className="btn btn-success" onClick={this.toggle}>Cancel</button>
-                    </div>
-
-                </div>
-                {/* <div className="modal-footer" style={{width: '500px', margin: 'auto', backgroundColor: '#e6e8ed'}}>
-            <button className="btn btn-success" onClick={this.toggle}>Agree</button>
-        </div> */}
-            </div>
-        );
-
-
         return (
             <div>
                 <div style={{ width: '400px' }}>
@@ -75,47 +55,14 @@ export class Project extends Component {
 
                     <button
                         className="btn btn-success"
+                        onClick={this.createProject}
                     >
                         CREATE
                     </button>
 
                     <br />
 
-                    <div>
-                        <table className="table table-striped">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th style={{ textAlign: 'center' }}>Add Member</th>
-                                    <th style={{ textAlign: 'center' }}>View Members</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>John</td>
-                                    <td style={{ textAlign: 'center' }}>
-                                        <i className="fas fa-user-plus" onClick={this.toggle}></i>
-                                    </td>
-                                    <td style={{ textAlign: 'center' }}><i className="fas fa-users"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>Mary</td>
-                                    <td style={{ textAlign: 'center' }}><i className="fas fa-user-plus"></i></td>
-                                    <td style={{ textAlign: 'center' }}><i className="fas fa-users"></i></td>
-                                </tr>
-                                <tr>
-                                    <td>July</td>
-                                    <td style={{ textAlign: 'center' }}><i className="fas fa-user-plus"></i></td>
-                                    <td style={{ textAlign: 'center' }}><i className="fas fa-users"></i></td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-
-                    <div>
-                        {modal}
-                    </div>
-
+                   {this.props.projects.map(project => <TableProject key={project._id} project={project} />)}
                 </div>
 
 
@@ -123,3 +70,7 @@ export class Project extends Component {
         );
     }
 }
+
+const mapStateToProp = state => ({projects: state.projects});
+
+export const Project = connect(mapStateToProp)(ProjectComponent)

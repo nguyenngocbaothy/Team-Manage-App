@@ -7,8 +7,16 @@ function membersReducer(state = [], action) {
     return state;
 }
 
+function projectsReducer(state = [], action) {
+    if (action.type === 'GET_PROJECTS') return action.projects;
+    if (action.type === 'CREATE_PROJECT') return [...state, action.project];
+
+    return state;
+}
+
 const reducer = combineReducers({
-    members: membersReducer
+    members: membersReducer,
+    projects: projectsReducer
 })
 
 export const store = createStore(reducer);
