@@ -23,6 +23,17 @@ class Member extends MemberModel {
 
         return member.toObject();
     }
+
+    static async getMembers() {
+        const members = MemberModel.find({})
+        .catch(err => { 
+            throw new Error('Error to get member.') 
+        })
+
+        if (!members) { throw new Error('No members existed') }
+
+        return members;
+    }
 }
 
 module.exports = Member;

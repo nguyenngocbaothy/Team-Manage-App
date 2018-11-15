@@ -11,4 +11,10 @@ memberRouter.post('/', parser, (req, res) => {
     .catch(error => res.send({ success: false, message: error.message}));
 });
 
+memberRouter.get('/', parser, (req, res) => {
+    Member.getMembers()
+    .then(members => res.send({ success: true, members }))
+    .catch(error => res.send({ success: false, message: error.message}));
+});
+
 module.exports = { memberRouter };

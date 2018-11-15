@@ -1,12 +1,37 @@
 import React, { Component } from 'react';
+import { TableMember } from '../screens/TableMember';
+import axios from 'axios';
+import { connect } from 'react-redux';
 
-export class Member extends Component {
+export class MemberComponent extends Component {
     constructor(props) {
         super(props);
         this.state = {
             txtName: '',
             txtPhone: ''
         }
+
+        this.createMember = this.createMember.bind(this);
+    }
+
+    componentDidMount() {
+        axios.get('http://localhost:4000/member/')
+        .then(data => {
+            this.props.dispatch({type: 'GET_MEMBERS', members: data.data.members})
+        });
+    }
+
+    createMember() {
+        const { txtName, txtPhone } = this.state;
+        axios.post('http://localhost:4000/member/', { 
+            name: txtName,
+            phone: txtPhone
+        })
+        .then(data => {
+            this.props.dispatch({type: 'CREATE_MEMBER', member: data.data.member})
+        });
+
+        this.setState({txtName: '', txtPhone: ''});
     }
 
     render() {
@@ -40,6 +65,7 @@ export class Member extends Component {
 
                     <button
                         className="btn btn-success"
+                        onClick={this.createMember}
                     >
                         CREATE
                     </button>
@@ -47,31 +73,12 @@ export class Member extends Component {
 
                 <br />
 
-                <div>
-                    <table className="table table-striped">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Phone</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>John</td>
-                                <td>john@example.com</td>
-                            </tr>
-                            <tr>
-                                <td>Mary</td>
-                                <td>mary@example.com</td>
-                            </tr>
-                            <tr>
-                                <td>July</td>
-                                <td>july@example.com</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+                {this.props.members.map(member => <TableMember key={member._id} member={member} />)}
             </div>
         );
     }
 }
+
+const mapStateToProp = state => ({members: state.members});
+
+export const Member = connect(mapStateToProp)(MemberComponent)
