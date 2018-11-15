@@ -6,7 +6,7 @@ export class TableMember extends Component {
         const { name, phone } = this.props.member;
         return (
             <div>
-                <table className="table table-striped">
+                <table className="table table-striped" style={{width: '50%'}}>
                     <thead>
                         <tr>
                             <th>Name</th>

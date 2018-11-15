@@ -17,7 +17,7 @@ export class ProjectComponent extends Component {
     componentDidMount() {
         axios.get('http://localhost:4000/project/')
         .then(data => {
-            console.log(data.data.projects);
+            // console.log(data.data.projects);
             this.props.dispatch({type: 'GET_PROJECTS', projects: data.data.projects})
         });
     }
